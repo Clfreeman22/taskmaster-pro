@@ -33,6 +33,7 @@ var loadTasks = function() {
 
   // loop over object properties
   $.each(tasks, function(list, arr) {
+    //console.log(list, arr);
     // then loop over sub-array
     arr.forEach(function(task) {
       createTask(task.text, task.date, list);
@@ -79,21 +80,33 @@ $("#task-form-modal .btn-primary").click(function() {
     saveTasks();
   }
 });
+
+// task text was clicked
 $(".list-group").on("click", "p",function() {
+  // get current p element
   var text = $(this)
   .text()
   .trim();
-  var textInput = $("textarea")
+
+  // replace p element with text area
+  var textInput = $("<textarea>")
   .addClass("form-control")
   .val(text);
   $(this).replaceWith(textInput);
+
+  // auto focus on new element
   textInput.trigger("focus");
-  console.log(text);
 });
+
+// editable field was unfocused
 $(".list-group").on("blur","textarea",function() {
+
+  // get the current value of the textarea
   var text = $(this)
     .val()
     .trim();
+
+   // get the status and position in the list 
   var status = $(this)
     .closest(".list-group")
     .attr("id")
@@ -101,8 +114,12 @@ $(".list-group").on("blur","textarea",function() {
   var index = $(this)
     .closest(".list-group-item")
     .index();
+
+  // update task array and resave localstorage
   tasks[status][index].text = text;
   saveTasks();
+
+
   // recreate p element
   var taskP = $("<p>")
     .addClass ("m-1")
@@ -110,6 +127,8 @@ $(".list-group").on("blur","textarea",function() {
   // replace text area with p element
   $(this).replaceWith(taskP);
 });
+
+// due date was clicked
 $(".list-group").on("click","span",function() {
   
   //get current text
